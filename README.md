@@ -3,7 +3,7 @@ Debouncer circuit in Verilog to filter glitches/bounces inherent in switches.
 
 Source codes included
 ---------------------
--- Debouncer
+-- Debouncer and test bench
 
 Comments
 --------
