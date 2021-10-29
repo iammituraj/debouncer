@@ -7,7 +7,7 @@
                   
    Developer    : Mitu Raj, iammituraj@gmail.com
    Notes        : Fully synthesisable, portable and tested code.
-                  < 1 MHz clock is recommended for minimal resource usage; and < 10 ms as bouncing interval.
+                  < 1 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
    License      : Open-source.
    Date         : Oct-28-2021
 ===============================================================================================================================*/
@@ -34,7 +34,8 @@ module debouncer #(
 /*-------------------------------------------------------------------------------------------------------------------------------
    Internal Registers/Signals
 -------------------------------------------------------------------------------------------------------------------------------*/
-logic                sig_rg, sig_d_rg, sig_debounced_rg ;        // Registers for switch state
+logic                isig_rg, isig_sync_rg              ;        // Registers in 2FF Synchronizer 
+logic                sig_rg, sig_d_rg, sig_debounced_rg ;        // Registers for switch's state
 logic [N_BOUNCE : 0] counter_rg                         ;        // Counter
 
 
@@ -58,7 +59,7 @@ always @(posedge clk) begin
    else begin
       
       // Register state of switch      
-      sig_rg     <= i_sig                                     ;
+      sig_rg     <= isig_sync_rg                              ;
       sig_d_rg   <= sig_rg                                    ;
 
       // Increment counter if two consecutive states are same, otherwise reset
@@ -68,6 +69,31 @@ always @(posedge clk) begin
       if (counter_rg [N_BOUNCE]) begin
          sig_debounced_rg <= sig_d_rg ;
       end
+
+   end
+
+end
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------
+   2FF Synchronizer
+-------------------------------------------------------------------------------------------------------------------------------*/
+always @(posedge clk) begin
+   
+   // Reset  
+   if (!rstn) begin
+      
+      // Internal Registers
+      isig_rg      <= 1'b0 ;
+      isig_sync_rg <= 1'b0 ;
+      
+   end
+   
+   // Out of reset
+   else begin
+      
+      isig_rg      <= i_sig   ;        // Metastable flop
+      isig_sync_rg <= isig_rg ;        // Synchronizing flop
 
    end
 
