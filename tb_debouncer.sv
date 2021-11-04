@@ -3,7 +3,7 @@
 
    Description  : Emulates a simple switch to test Debouncer.                               
                   
-   Developer    : Mitu Raj, iammituraj@gmail.com
+   Developer    : Mitu Raj, chip@chipmunklogic.com at Chipmunk Logic ™, https://chipmunklogic.com
    Notes        : -
    License      : Open-source.
    Date         : Oct-28-2021

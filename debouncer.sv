@@ -5,7 +5,7 @@
                   -- Configurable bouncing interval in powers of 2. 
                   -- Changes state at the output based on counting number of consecutive same states latched at the input.                               
                   
-   Developer    : Mitu Raj, iammituraj@gmail.com
+   Developer    : Mitu Raj, chip@chipmunklogic.com at Chipmunk Logic ™, https://chipmunklogic.com
    Notes        : Fully synthesisable, portable and tested code.
                   < 1 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
    License      : Open-source.
