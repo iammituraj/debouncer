@@ -17,7 +17,7 @@
    Notes        : Fully synthesisable, portable and tested code.
                   < 1 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
    License      : Open-source.
-   Date         : Oct-28-2021
+   Date         : Nov-09-2021
 ===============================================================================================================================*/
 
 /*-------------------------------------------------------------------------------------------------------------------------------
