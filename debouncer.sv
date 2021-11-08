@@ -3,8 +3,16 @@
 
    Description  : Debouncer is used to filter bouncing found in typical switches and provide a clean, glitch-free state change.
                   -- Configurable bouncing interval in powers of 2. 
-                  -- Changes state at the output based on counting number of consecutive same states latched at the input.                               
-                  
+                  -- Changes state at the output based on counting the no. of times the same input is sampled consecutively.
+                     Only stable switch transitions hence appear at output.   
+                  -- Debounces both assertion and release of switches.                            
+                  -- Supports both pull-up and pull-down switch inputs.
+                  -- Debouncer is designed to debounce switches with pull-down (OFF state = '0', ON state = '1').                                        
+                     For pull-up switches (OFF state = '1', ON state = '0'), debounced signal should be treated as valid 
+                     only after one bouncing interval latency after reset. Because on reset, debounced signal 
+                     drives '0' by default, which is ON state for pull-up switch. This may be undesirable. 
+                     If the initial latency is undesired, IS_PULLUP parameter can be set.                      
+
    Developer    : Mitu Raj, chip@chipmunklogic.com at Chipmunk Logic ™, https://chipmunklogic.com
    Notes        : Fully synthesisable, portable and tested code.
                   < 1 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
@@ -19,8 +27,9 @@
 module debouncer #(
    
    // Global Parameters   
-   parameter N_BOUNCE     =  3              // Bouncing interval in clock cycles = 2^N_BOUNCE
-   
+   parameter N_BOUNCE    =  3   ,           // Bouncing interval in clock cycles = 2^N_BOUNCE
+   parameter IS_PULLUP   =  0               // Optional: '1' for pull-up switch, '0' for pull-down switch
+                                                  
 ) 
 
 (
@@ -48,10 +57,10 @@ always @(posedge clk) begin
    if (!rstn) begin
       
       // Internal Registers
-      sig_rg           <= 1'b0 ;
-      sig_d_rg         <= 1'b0 ;
-      sig_debounced_rg <= 1'b0 ;
-      counter_rg       <=  1   ;
+      sig_rg           <= IS_PULLUP ; 
+      sig_d_rg         <= IS_PULLUP ;
+      sig_debounced_rg <= IS_PULLUP ;
+      counter_rg       <=  1        ;
 
    end
    
@@ -84,8 +93,8 @@ always @(posedge clk) begin
    if (!rstn) begin
       
       // Internal Registers
-      isig_rg      <= 1'b0 ;
-      isig_sync_rg <= 1'b0 ;
+      isig_rg      <= IS_PULLUP ;
+      isig_sync_rg <= IS_PULLUP ;
       
    end
    
