@@ -44,7 +44,8 @@ logic clk, rstn, sig_in, sig_debounced ;        // DUT signals
 -------------------------------------------------------------------------------------------------------------------------------*/
 debouncer #( 
 
-   .N_BOUNCE ( N_BOUNCE ) 
+   .N_BOUNCE  ( N_BOUNCE ) ,
+   .IS_PULLUP ( 1        ) 
 
 )
 
