@@ -15,7 +15,7 @@
 
    Developer    : Mitu Raj, chip@chipmunklogic.com at Chipmunk Logic ™, https://chipmunklogic.com
    Notes        : Fully synthesisable, portable and tested code.
-                  < 1 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
+                  < 10 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
    License      : Open-source.
    Date         : Nov-09-2021
 ===============================================================================================================================*/
