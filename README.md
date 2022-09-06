@@ -1,4 +1,4 @@
-# debouncer
+# Debouncer
 Debouncer circuit in Verilog to filter glitches/bounces inherent in switches.
 
 Source codes included
