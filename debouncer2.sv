@@ -2,9 +2,9 @@
    Module       : Debouncer
 
    Description  : Debouncer is used to filter bouncing found in typical switches and provide a clean, glitch-free state change.
-                  -- Configurable bouncing interval in powers of 2 (threshold).
-                  -- Changes state at the output based on counting the no. of times the same input is sampled consecutively.
-                     Switch state transition appears at output only if the count crosses the threshold. 
+                  -- Configurable threshold in powers of 2. 
+                  -- Changes state at the output based on averaging the samples and filtering.
+                     Switch state transition appears at output only if the averaged value crosses the threshold. 
                   -- Debounces both assertion and release of switches.                            
                   -- Supports both pull-up and pull-down switch inputs.
                   -- Debouncer is designed to debounce switches with pull-down (OFF state = '0', ON state = '1').                                        
@@ -17,17 +17,17 @@
    Notes        : Fully synthesisable, portable and tested code.
                   < 10 MHz clock is recommended for minimal resource usage assuming < 10 ms as switch bouncing time.
    License      : Open-source.
-   Date         : Nov-09-2021
+   Date         : Dec-01-2022
 ===============================================================================================================================*/
 
 /*-------------------------------------------------------------------------------------------------------------------------------
                                                       D E B O U N C E R
 -------------------------------------------------------------------------------------------------------------------------------*/
 
-module debouncer #(
+module debouncer2 #(
    
    // Global Parameters   
-   parameter N_BOUNCE    =  3   ,           // Bouncing interval in clock cycles = 2^N_BOUNCE
+   parameter N_THRESH    =  3   ,           // Threshold in clock cycles = 2^N_THRESH
    parameter IS_PULLUP   =  0               // Optional: '1' for pull-up switch, '0' for pull-down switch
                                                   
 ) 
@@ -44,8 +44,8 @@ module debouncer #(
    Internal Registers/Signals
 -------------------------------------------------------------------------------------------------------------------------------*/
 logic                isig_rg, isig_sync_rg              ;        // Registers in 2FF Synchronizer 
-logic                sig_rg, sig_d_rg, sig_debounced_rg ;        // Registers for switch's state
-logic [N_BOUNCE : 0] counter_rg                         ;        // Counter
+logic                sig_rg, sig_debounced_rg           ;        // Registers for switch's state
+logic [N_THRESH : 0] counter_rg                         ;        // Counter
 
 
 /*-------------------------------------------------------------------------------------------------------------------------------
@@ -58,9 +58,8 @@ always @(posedge clk) begin
       
       // Internal Registers
       sig_rg           <= IS_PULLUP ; 
-      sig_d_rg         <= IS_PULLUP ;
       sig_debounced_rg <= IS_PULLUP ;
-      counter_rg       <=  1        ;
+      counter_rg       <=  0        ;
 
    end
    
@@ -68,15 +67,15 @@ always @(posedge clk) begin
    else begin
       
       // Register state of switch      
-      sig_rg   <= isig_sync_rg  ;
-      sig_d_rg <= sig_rg        ;
+      sig_rg <= isig_sync_rg ;
 
-      // Increment counter if two consecutive states are same, otherwise reset
-      counter_rg <= (sig_d_rg == sig_rg) ? counter_rg + 1 : 1 ;
+      // Increment counter if sampled state = different from present state, otherwise decrement
+      counter_rg <= (sig_rg != sig_debounced_rg) ? counter_rg + 1 : 
+                    (counter_rg > 0) ? counter_rg - 1 : counter_rg ;
       
-      // Counter overflow, valid state registered
-      if (counter_rg [N_BOUNCE]) begin
-         sig_debounced_rg <= sig_d_rg ;
+      // Counter overflow, valid state transition registered
+      if (counter_rg [N_THRESH]) begin
+         sig_debounced_rg <= sig_rg ;
       end
 
    end

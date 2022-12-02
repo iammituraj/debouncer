@@ -4,6 +4,8 @@ Debouncer circuit in Verilog to filter glitches/bounces inherent in switches.
 Source codes included
 ---------------------
 -- Debouncer and test bench
+-- debouncer  = sample stable state type
+-- debouncer2 = averaging type debouncer; more power saving, and lesser latency
 
 Comments
 --------

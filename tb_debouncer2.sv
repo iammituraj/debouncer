@@ -6,7 +6,7 @@
    Developer    : Mitu Raj, chip@chipmunklogic.com at Chipmunk Logic ™, https://chipmunklogic.com
    Notes        : -
    License      : Open-source.
-   Date         : Dec-01-2022
+   Date         : Oct-28-2021
 ===============================================================================================================================*/
 
 /*-------------------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 // Timescale for simulation
 `timescale 1ns / 100ps
 
-module tb_debouncer2 () ;
+module tb_debouncer () ;
 
 
 /*-------------------------------------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ localparam real BOUNCING   = 10                                       ;        /
    Derived Parameters
 -------------------------------------------------------------------------------------------------------------------------------*/
 localparam BOUNCING_CYCLES = int'((BOUNCING / CLK_PERIOD) * 1000000)  ;        // Bouncing time in clock cycles
-localparam N_THRESH        = $clog2 (BOUNCING_CYCLES)                 ;        // N_THRESH configuration at DUT = >50% BOUNCING
+localparam N_BOUNCE        = $clog2 (BOUNCING_CYCLES)                 ;        // N_BOUNCE configuration at DUT
 
 
 /*-------------------------------------------------------------------------------------------------------------------------------
@@ -42,9 +42,9 @@ logic clk, rstn, sig_in, sig_debounced ;        // DUT signals
 /*-------------------------------------------------------------------------------------------------------------------------------
    DUT: Debouncer instance
 -------------------------------------------------------------------------------------------------------------------------------*/
-debouncer2 #( 
+debouncer #( 
 
-   .N_THRESH  ( N_THRESH ) ,
+   .N_BOUNCE  ( N_BOUNCE ) ,
    .IS_PULLUP ( 1        ) 
 
 )
