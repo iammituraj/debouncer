@@ -46,6 +46,7 @@ module debouncer #(
 logic                isig_rg, isig_sync_rg              ;        // Registers in 2FF Synchronizer 
 logic                sig_rg, sig_d_rg, sig_debounced_rg ;        // Registers for switch's state
 logic [N_BOUNCE : 0] counter_rg                         ;        // Counter
+logic [N_BOUNCE : 0] nxt_cnt                            ;        // Next count
 
 
 /*-------------------------------------------------------------------------------------------------------------------------------
@@ -72,7 +73,7 @@ always @(posedge clk) begin
       sig_d_rg <= sig_rg        ;
 
       // Increment counter if two consecutive states are same, otherwise reset
-      counter_rg <= (sig_d_rg == sig_rg) ? counter_rg + 1 : 1 ;
+      counter_rg <= (sig_d_rg == sig_rg) ? nxt_cnt : 1 ;
       
       // Counter overflow, valid state registered
       if (counter_rg [N_BOUNCE]) begin
@@ -82,6 +83,8 @@ always @(posedge clk) begin
    end
 
 end
+
+assign nxt_cnt = (counter_rg [N_BOUNCE])? counter_rg : (counter_rg + 1) ;
 
 
 /*-------------------------------------------------------------------------------------------------------------------------------
