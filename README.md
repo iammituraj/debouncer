@@ -7,7 +7,7 @@ Source codes included
 
 -- debouncer  = sample stable state type
 
--- debouncer2 = averaging type debouncer; more power saving, and lesser latency
+-- debouncer2 = averaging type debouncer; more power consuming, but lesser latency
 
 Comments
 --------
