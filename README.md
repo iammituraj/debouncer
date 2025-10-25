@@ -9,7 +9,7 @@ Source codes included
 
 -- debouncer2 = averaging type debouncer; lesser latency
 
-Comments
+License
 --------
 All codes are fully portable, synthesizable and tested. All are open-source codes, free to use, modify and distribute without any conflicts of interest with the original developer.
 
